@@ -39,17 +39,30 @@ if not os.path.exists(FILE_DATA_SISWA):
         writer.writerow(["Waktu_Registrasi", "Nama_Siswa", "Kelas", "Asal_Sekolah", "No_Absen", "Pemahaman_Awal"])
 
 def ambil_konfigurasi():
-    try:
-        with open(FILE_CONFIG, mode="r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
+    konfigurasi = {
+        "token_aktif": os.environ.get("ALJABAR_TOKEN_AKTIF", "").strip().upper(),
+        "pin_guru": os.environ.get("ALJABAR_PIN_GURU", "").strip(),
+    }
+    if os.path.exists(FILE_CONFIG):
         try:
-            token_aktif = st.secrets.get("token_aktif", "")
-            pin_guru = st.secrets.get("pin_guru", "")
+            with open(FILE_CONFIG, mode="r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, dict):
+                    if data.get("token_aktif"):
+                        konfigurasi["token_aktif"] = str(data["token_aktif"]).strip().upper()
+                    if data.get("pin_guru"):
+                        konfigurasi["pin_guru"] = str(data["pin_guru"]).strip()
         except Exception:
-            token_aktif = os.environ.get("ALJABAR_TOKEN_AKTIF", "")
-            pin_guru = os.environ.get("ALJABAR_PIN_GURU", "")
-        return {"token_aktif": str(token_aktif), "pin_guru": str(pin_guru)}
+            pass
+    try:
+        if "pin_guru" in st.secrets and str(st.secrets["pin_guru"]).strip():
+            konfigurasi["pin_guru"] = str(st.secrets["pin_guru"]).strip()
+        if "token_aktif" in st.secrets and str(st.secrets["token_aktif"]).strip():
+            konfigurasi["token_aktif"] = str(st.secrets["token_aktif"]).strip().upper()
+    except Exception:
+        pass
+
+    return konfigurasi
 
 def simpan_konfigurasi(token_baru, pin_baru):
     with open(FILE_CONFIG, mode="w", encoding="utf-8") as f:
@@ -155,11 +168,12 @@ with st.sidebar:
             st.write("Masukkan PIN Guru untuk membuka kontrol panel dan rekap data siswa:")
             pin_input = st.text_input("PIN Guru:", type="password", key="input_pin_guru")
             if st.button("Masuk Mode Guru 🔓", key="btn_login_guru"):
-                if cfg["pin_guru"] and pin_input == cfg["pin_guru"]:
+                pin_tersimpan = cfg.get("pin_guru", "").strip()
+                if pin_tersimpan and pin_input.strip() == pin_tersimpan:
                     st.session_state.is_guru = True
                     st.success("Akses Guru Berhasil Diberikan!")
                     st.rerun()
-                elif not cfg["pin_guru"]:
+                elif not pin_tersimpan:
                     st.error("PIN Guru belum dikonfigurasi oleh administrator.")
                 else:
                     st.error("PIN Guru tidak valid! Akses ditolak.")
@@ -244,7 +258,7 @@ elif st.session_state.current_panel == "2. Registrasi":
     st.write("Silakan lengkapi data diri Anda dan masukkan Token Akses dari guru untuk beralih ke Tutorial:")
 
     cfg = ambil_konfigurasi()
-    token_valid = cfg["token_aktif"].strip().upper()
+    token_valid = cfg.get("token_aktif", "").strip().upper()
     if not token_valid:
         st.warning("Token akses belum dikonfigurasi oleh administrator.")
 
