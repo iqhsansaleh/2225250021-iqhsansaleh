@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.py[cod]
+config_guru.json
+data_siswa.csv
+.streamlit/secrets.toml

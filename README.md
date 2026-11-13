@@ -7,67 +7,54 @@ Proyek Perangkat Lunak Media Pembelajaran Matematika
 
 ---
 
-## 🧭 4 Panel Alur Pembelajaran (User Workflow)
+## 🔒 Fitur Baru: Sistem Uji Coba & Manajemen Guru
 
-Aplikasi ini menggunakan alur belajar bertahap (*multi-panel workflow*) dengan *State Management* (`st.session_state`):
+Aplikasi ini telah dirancang dengan **pemisahan hak akses** antara Siswa dan Guru/Peneliti:
 
-1. **👋 Panel 1: Selamat Datang**
-   * Sambutan ramah untuk siswa SMP.
-   * Penjelasan pentingnya aljabar dan orientasi fitur aplikasi.
-   * Tombol navigasi langsung menuju registrasi.
+### 1. Hak Akses Siswa (Linear Flow - Terkunci)
+* Siswa **TIDAK BISA** melompat antar-panel secara bebas. Mereka harus melalui alur terurut:
+  `1. Selamat Datang` $\rightarrow$ `2. Registrasi + Token` $\rightarrow$ `3. Tutorial` $\rightarrow$ `4. Kalkulator Siap Digunakan` $\rightarrow$ `5. Keluar`.
+* **Validasi Token:** Pada tahap registrasi, siswa **wajib memasukkan Token Akses** yang telah dikonfigurasi oleh Guru. Jika token salah, siswa tidak dapat melanjutkan ke tutorial.
+* **Panel Keluar:** Siswa dapat menyelesaikan sesi dengan menekan tombol `🚪 Selesaikan Sesi & Keluar`.
 
-2. **📝 Panel 2: Registrasi Siswa**
-   * Formulir identitas siswa: Nama Lengkap, Kelas (7A-7H), Asal Sekolah/Madrasah, No. Absen, dan Tingkat Pemahaman Awal.
-   * Data siswa disimpan pada sesi aktif dan ditampilkan pada *sidebar*.
-
-3. **📖 Panel 3: Tutorial Penggunaan**
-   * **Aturan Penulisan:** Cara mengetik variabel (`x`, `y`), koefisien $1$ / $-1$, tanda negatif, dan pangkat `^`.
-   * **Konsep Suku Sejenis:** Perbedaan mendasar suku sejenis vs tidak sejenis untuk mencegah miskonsepsi (misal: $3x + 4 \neq 7x$).
-   * **Cara Membaca Langkah:** Panduan menelaah kartu penjelasan bertahap.
-
-4. **🟢 Panel 4: Kalkulator Siap Digunakan**
-   * Banner status hijau personal dengan nama dan kelas siswa.
-   * **5 Tab Operasi Aljabar:**
-     1. ➕ **Sederhanakan Aljabar** (Penjumlahan & Pengurangan Suku Sejenis)
-     2. 🔍 **Bedah Unsur Aljabar** (Koefisien, Variabel, Konstanta, Jumlah Suku)
-     3. ✖️ **Perkalian Distributif** ($k(ax + b)$)
-     4. 🔢 **Evaluasi / Substitusi Nilai** (Hitung jika $x = c$)
-     5. ⚖️ **Persamaan Linear Satu Variabel (PLSV)** ($ax + b = c$)
+### 2. Hak Akses Guru / Peneliti (Admin Mode)
+* Berada pada bilah sisi (*sidebar*) di bawah menu **`🔒 Akses Khusus Guru / Peneliti`**.
+* Dilindungi **PIN Guru** yang diatur secara rahasia oleh administrator.
+* **Fitur Guru:**
+  1. **Navigasi Panel Bebas:** Guru dapat melompat langsung ke panel manapun untuk demonstrasi.
+   2. **Pengaturan Token Ujian:** Mengganti token ujian secara berkala.
+  3. **📊 Dashboard Rekap Data Siswa:** Menampilkan seluruh nama siswa, kelas, sekolah, absen, dan tingkat pemahaman yang tersimpan ke file `data_siswa.csv`.
+  4. **📥 Unduh Data:** Tombol unduh otomatis berkas CSV / Excel untuk analisis penelitian atau penilaian.
 
 ---
 
-## ⚙️ Arsitektur Algoritma & Struktur Data
+## 🚀 Cara Menjalankan Aplikasi
 
-### A. Struktur Data Suku (`SukuAljabar`)
-Di dalam [algebra_engine.py](file:///c:/2225250021_iqhsansaleh/algebra_engine.py):
-* `koefisien` (float): Angka pengali suku.
-* `variabel` (str / None): Simbol huruf peubah atau `None` jika konstanta.
-* `pangkat` (int): Derajat eksponen variabel.
-* `kunci_sejenis`: Mengembalikan *tuple* `(variabel, pangkat)`. Suku dikatakan sejenis jika memiliki kunci yang sama.
-
-### B. Pipeline Eksekusi
-1. **Tokenisasi (Regex):** String aljabar dipisahkan menjadi token bertanda (contoh: `3x + 5 - 2x` $\rightarrow$ `['+3x', '+5', '-2x']`).
-2. **Parsing:** Setiap token dikonversi menjadi objek `SukuAljabar`.
-3. **Grouping (Hash Map / Dictionary):** Suku dengan `kunci_sejenis` sama digabungkan koefisiennya.
-4. **Step Logging:** Setiap fase kalkulasi direkam ke daftar riwayat penjelasan lengkap dengan format rumus LaTeX.
-
----
-
-## 🚀 Cara Menjalankan Aplikasi di Laptop
-
-1. Buka PowerShell atau Command Prompt pada folder proyek:
+1. Buka PowerShell pada folder proyek:
    ```powershell
    cd c:\2225250021_iqhsansaleh
    ```
-2. Pastikan pustaka `streamlit` terpasang:
+2. Pastikan dependensi terpasang:
    ```powershell
-   python -m pip install streamlit
+   python -m pip install -r requirements.txt
    ```
 3. Jalankan aplikasi web:
    ```powershell
    python -m streamlit run app.py
    ```
-4. Buka browser pada alamat:
-   ```
-   http://localhost:8501
-   ```
+4. Buka di browser pada: `http://localhost:8501`
+
+---
+
+## 🔐 Konfigurasi Rahasia
+
+Jangan unggah `config_guru.json`, `data_siswa.csv`, atau kredensial ke repositori publik. File konfigurasi lokal dan data siswa diabaikan oleh Git.
+
+Untuk Streamlit Community Cloud, buka **App settings → Secrets** dan atur nilai rahasia berikut dengan kredensial pilihan Anda:
+
+```toml
+token_aktif = "GANTI_DENGAN_TOKEN_RAHASIA"
+pin_guru = "GANTI_DENGAN_PIN_KUAT"
+```
+
+Tanpa konfigurasi tersebut, kalkulator tetap dapat dibuka, tetapi validasi token siswa dan akses guru tidak aktif.
