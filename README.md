@@ -1,28 +1,47 @@
-# 📐 AljabarKu: Kalkulator Aljabar Edukatif SMP Kelas 7
+# 📐 AljabarKu: Kalkulator Aljabar Berbasis Rigorous Mathematical Thinking (RMT) SMP Kelas 7
 
 Proyek Perangkat Lunak Media Pembelajaran Matematika  
 **Mata Kuliah:** Algoritma dan Pemrograman  
 **Program Studi:** Pendidikan Matematika (Semester 3)  
-**Referensi Inspirasi:** [MathPapa Algebra Calculator](https://www.mathpapa.com/algebra-calculator.html)
+**Landasan Teoretis:** *Rigorous Mathematical Thinking* (Kinard & Kozulin, 2008), *Mediated Learning Experience* (Feuerstein), & *Psychological Tools* (Vygotsky)  
 
 ---
 
-## 🔒 Fitur Baru: Sistem Uji Coba & Manajemen Guru
+## 🧠 Integrasi Konsep Rigorous Mathematical Thinking (RMT)
 
-Aplikasi ini telah dirancang dengan **pemisahan hak akses** antara Siswa dan Guru/Peneliti:
+Kalkulator ini dirancang khusus untuk mentransformasikan media kalkulator dari sekadar **"mesin penjawab mekanis instan"** (*black-box solver*) menjadi **alat mediasi kognitif (*cognitive psychological tool*)** yang membangun cara berpikir matematis yang mendalam dan terstruktur:
+
+### 1. Level 1: Qualitative Operations (Berpikir Kualitatif)
+* **Pelabelan Matematis (*Labeling*):** Membedakan secara presisi antara variabel (besaran nilai), koefisien (faktor pengali kuantitas), konstanta (kuantitas invarian), dan derajat suku.
+* **Analisis Atribut Kritis Suku Sejenis (*Comparing*):** Menegaskan bahwa suku sejenis wajib memenuhi dua atribut kritis: **variabel sama DAN derajat pangkat sama**. Menjelaskan mengapa $3x$ dan $3x^2$ bukan suku sejenis.
+
+### 2. Level 2: Quantitative Operations (Representasi Semi-Konkret)
+* **Model Luas Persegi Panjang (*Area Model*):** Menjelaskan perkalian distributif $k(ax + b)$ melalui representasi geometri luas persegi panjang besar berlebar $k$ dan panjang total $(ax + b)$.
+* **Model Timbangan Setimbang (*Balance Scale*):** Merepresentasikan persamaan linear satu variabel (PLSV) sebagai sistem kesetimbangan yang harus dijaga keajegannya.
+
+### 3. Level 3: Abstract Mathematical Operations (Penalaran Abstrak & Relasional)
+* **Pembersihan Miskonsepsi Fatal "Pindah Ruas":** Menghapus total aturan mekanis "pindah ruas ganti tanda". Menggantikannya dengan **Sifat Kesetaraan (Invariance of Equality)** dan **Invers Aditif ($k + (-k) = 0$)** serta **Invers Multiplikatif ($\frac{1}{a} \cdot a = 1$)**.
+* **Landasan Sifat Distributif:** Menjelaskan bahwa penggabungan suku sejenis ($ax + bx = (a + b)x$) berakar dari sifat distributif perkalian terhadap penjumlahan, bukan sekadar aturan acak "jumlahkan koefisien".
+* **Refleksi Metakognitif & Verifikasi Solusi (*Proof of Correctness*):** Mewajibkan pengujian balik solusi variabel ke persamaan awal untuk membuktikan $\text{Ruas Kiri (LHS)} = \text{Ruas Kanan (RHS)}$.
+
+---
+
+## 🔒 Sistem Alur Uji Coba & Manajemen Guru
+
+Aplikasi memiliki **pemisahan hak akses** terstruktur antara Siswa dan Guru/Peneliti:
 
 ### 1. Hak Akses Siswa (Linear Flow - Terkunci)
-* Siswa **TIDAK BISA** melompat antar-panel secara bebas. Mereka harus melalui alur terurut:
-  `1. Selamat Datang` $\rightarrow$ `2. Registrasi + Token` $\rightarrow$ `3. Tutorial` $\rightarrow$ `4. Kalkulator Siap Digunakan` $\rightarrow$ `5. Keluar`.
-* **Validasi Token:** Pada tahap registrasi, siswa **wajib memasukkan Token Akses** yang telah dikonfigurasi oleh Guru. Jika token salah, siswa tidak dapat melanjutkan ke tutorial.
+* Alur belajar terurut:  
+  `1. Selamat Datang` $\rightarrow$ `2. Registrasi + Token` $\rightarrow$ `3. Tutorial RMT` $\rightarrow$ `4. Kalkulator RMT Siap Digunakan` $\rightarrow$ `5. Keluar`.
+* **Validasi Token:** Pada tahap registrasi, siswa **wajib memasukkan Token Akses** yang diberikan oleh Guru.
 * **Panel Keluar:** Siswa dapat menyelesaikan sesi dengan menekan tombol `🚪 Selesaikan Sesi & Keluar`.
 
 ### 2. Hak Akses Guru / Peneliti (Admin Mode)
 * Berada pada bilah sisi (*sidebar*) di bawah menu **`🔒 Akses Khusus Guru / Peneliti`**.
-* Dilindungi **PIN Guru** yang diatur secara rahasia oleh administrator.
+* Dilindungi **PIN Guru** yang dapat diatur oleh administrator.
 * **Fitur Guru:**
   1. **Navigasi Panel Bebas:** Guru dapat melompat langsung ke panel manapun untuk demonstrasi.
-   2. **Pengaturan Token Ujian:** Mengganti token ujian secara berkala.
+  2. **Pengaturan Token Ujian:** Mengganti token ujian secara berkala.
   3. **📊 Dashboard Rekap Data Siswa:** Menampilkan seluruh nama siswa, kelas, sekolah, absen, dan tingkat pemahaman yang tersimpan ke file `data_siswa.csv`.
   4. **📥 Unduh Data:** Tombol unduh otomatis berkas CSV / Excel untuk analisis penelitian atau penilaian.
 
@@ -38,7 +57,7 @@ Aplikasi ini telah dirancang dengan **pemisahan hak akses** antara Siswa dan Gur
    ```powershell
    python -m pip install -r requirements.txt
    ```
-3. Jalankan aplikasi web:
+3. Jalankan aplikasi web Streamlit:
    ```powershell
    python -m streamlit run app.py
    ```
@@ -46,15 +65,27 @@ Aplikasi ini telah dirancang dengan **pemisahan hak akses** antara Siswa dan Gur
 
 ---
 
-## 🔐 Konfigurasi Rahasia
+## 🤖 Fitur Baru: Tutor AI Berbasis Google Gemini (RMT Scaffolding)
 
-Jangan unggah `config_guru.json`, `data_siswa.csv`, atau kredensial ke repositori publik. File konfigurasi lokal dan data siswa diabaikan oleh Git.
+Aplikasi kini dilengkapi dengan **Tab 6: Tanya Tutor AI (RMT)** yang ditenagai oleh model **Google Gemini**:
+* Berperan sebagai asisten guru matematika yang membimbing dengan pertanyaan pemantik (*scaffolding*), bukan sekadar pembocor jawaban.
+* Membantu siswa mendiskusikan sifat aljabar, menganalisis kesalahan berpikir (*misconception remediation*), dan memberikan teka-teki logika aljabar.
 
-Untuk Streamlit Community Cloud, buka **App settings → Secrets** dan atur nilai rahasia berikut dengan kredensial pilihan Anda:
+---
+
+## 🔐 Konfigurasi Rahasia & API Key
+
+Aplikasi membaca kunci rahasia secara otomatis melalui `.streamlit/secrets.toml` (lokal) atau **App Settings → Secrets** (Streamlit Cloud).
+
+Format isi file `.streamlit/secrets.toml`:
 
 ```toml
-token_aktif = "GANTI_DENGAN_TOKEN_RAHASIA"
-pin_guru = "GANTI_DENGAN_PIN_KUAT"
+# 1. API Key Google Gemini (Gratis di https://aistudio.google.com/)
+GEMINI_API_KEY = "AIzaSy..."
+
+# 2. Pengaturan Token Siswa & PIN Guru
+token_aktif = "UJICOBA2026"
+pin_guru = "123456"
 ```
 
-Tanpa konfigurasi tersebut, kalkulator tetap dapat dibuka, tetapi validasi token siswa dan akses guru tidak aktif.
+*Catatan: Jika API Key belum ditulis di `secrets.toml`, siswa/guru tetap dapat memasukkannya langsung secara fleksibel melalui antarmuka Tab 6 pada aplikasi.*
